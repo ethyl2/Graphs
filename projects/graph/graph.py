@@ -174,7 +174,31 @@ class Graph:
 
         Note that there are multiple valid paths.
         """
-        pass  # TODO
+        # Similar to bfs, except using a stack instead of a queue
+        gray = []
+        stack = Stack()
+
+        gray.append(starting_vertex)
+        # Unlike dft, the stack holds arrays (paths) instead of ints
+        stack.push([starting_vertex])
+
+        if starting_vertex == destination_vertex:
+            return stack
+
+        while stack.size() > 0:
+            current_path = stack.pop()
+            current_node = current_path[-1]
+            gray.append(current_node)
+            neighbors = self.get_neighbors(current_node)
+            for neighbor in neighbors:
+                if neighbor not in gray:
+                    new_path = list(current_path)
+                    new_path.append(neighbor)
+                    if neighbor == destination_vertex:
+                        return new_path
+                    gray.append(neighbor)
+                    stack.push(new_path)
+        return None
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """
@@ -250,14 +274,14 @@ if __name__ == '__main__':
     Valid BFS path:
         [1, 2, 4, 6]
     '''
-    print(graph.bfs(1, 6))
+    # print(graph.bfs(1, 6))
 
-    """
     '''
     Valid DFS paths:
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
     print(graph.dfs(1, 6))
+    """
     print(graph.dfs_recursive(1, 6))
     """
