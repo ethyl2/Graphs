@@ -58,8 +58,7 @@ class Graph:
         gray = []
         queue = Queue()
 
-        # Mark the starting_vertex gray and add it to the queue
-        gray.append(starting_vertex)
+        # Add the starting_vertex to the queue
         queue.enqueue(starting_vertex)
 
         # Stay in this loop as long as there are vertices in the queue
@@ -83,7 +82,22 @@ class Graph:
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        # Similar to bft, except using a stack instead of a queue
+        gray = []
+        stack = Stack()
+
+        gray.append(starting_vertex)
+        stack.push(starting_vertex)
+
+        while stack.size() > 0:
+            current = stack.pop()
+            gray.append(current)
+            print(current)
+            neighbors = self.get_neighbors(current)
+            for neighbor in neighbors:
+                if neighbor not in gray:
+                    gray.append(neighbor)
+                    stack.push(neighbor)
 
     def dft_recursive(self, starting_vertex):
         """
@@ -168,7 +182,7 @@ if __name__ == '__main__':
         1, 2, 4, 3, 7, 5, 6
     '''
     graph.bft(1)
-    """
+
     '''
     Valid DFT paths:
         1, 2, 3, 5, 4, 6, 7
@@ -177,6 +191,7 @@ if __name__ == '__main__':
         1, 2, 4, 6, 3, 5, 7
     '''
     graph.dft(1)
+    """
     graph.dft_recursive(1)
 
     '''
