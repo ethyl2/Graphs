@@ -21,20 +21,62 @@ class Graph:
         """
         Add a directed edge to the graph.
         """
-        self.vertices[v1].add(v2)
+        if v2 in self.vertices:
+            self.vertices[v1].add(v2)
+        else:
+            print(f'{v2} is not in graph')
+        # Should we add a check to see if v1 is in the graph, too?
 
     def get_neighbors(self, vertex_id):
         """
         Get all neighbors (edges) of a vertex.
         """
-        pass  # TODO
+        if vertex_id in self.vertices:
+            return self.vertices[vertex_id]
+        return None
 
     def bft(self, starting_vertex):
         """
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        # Pseudo-code from lecture:
+        # Mark all vertices as white
+        # Mark the starting_vertex as gray
+        # Enqueue the starting_vertex
+        # While the queue is not empty:
+        #   Assign a pointer to the head of the queue
+        #   Loop through the head's neighbors:
+        #       If the neighbor is white:
+        #           Color it gray
+        #           Add it to the queue
+        #   Now, dequeue the head
+        #   And mark it as black.
+        #   And print it.
+
+        # Assume the vertices are all white at first
+        gray = []
+        queue = Queue()
+
+        # Mark the starting_vertex gray and add it to the queue
+        gray.append(starting_vertex)
+        queue.enqueue(starting_vertex)
+
+        # Stay in this loop as long as there are vertices in the queue
+        while queue.size() > 0:
+            # Get the head of the queue
+            current = queue.dequeue()
+            # Mark it gray
+            gray.append(current)
+            # Print it
+            print(current)
+
+            # Get its neighbors. If they are still white, make them gray and add them to the queue.
+            neighbors = self.get_neighbors(current)
+            for neighbor in neighbors:
+                if neighbor not in gray:
+                    gray.append(neighbor)
+                    queue.enqueue(neighbor)
 
     def dft(self, starting_vertex):
         """
@@ -107,7 +149,9 @@ if __name__ == '__main__':
     '''
     print(graph.vertices)
 
-    """
+    # graph.add_edge(4, 0)
+    print(graph.get_neighbors(7))
+
     '''
     Valid BFT paths:
         1, 2, 3, 4, 5, 6, 7
@@ -124,7 +168,7 @@ if __name__ == '__main__':
         1, 2, 4, 3, 7, 5, 6
     '''
     graph.bft(1)
-
+    """
     '''
     Valid DFT paths:
         1, 2, 3, 5, 4, 6, 7
