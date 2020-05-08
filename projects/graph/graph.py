@@ -140,18 +140,18 @@ class Graph:
         while queue:
             print("Current state of the queue: " + str(queue.queue))
             # get the head from the queue
-            path = queue.dequeue()
+            current_path = queue.dequeue()
             # get the last node from the path
-            current = path[-1]
-            print("Now visiting " + str(current) +
-                  " whose neighbors are " + str(self.get_neighbors(current)))
-            if current not in gray:
-                neighbors = self.get_neighbors(current)
+            current_vertex = current_path[-1]
+            print("Now visiting " + str(current_vertex) +
+                  " whose neighbors are " + str(self.get_neighbors(current_vertex)))
+            if current_vertex not in gray:
+                neighbors = self.get_neighbors(current_vertex)
                 # Go through all neighbor nodes
                 #   Construct a new path which consists of the path, with the neighbor appended to it.
                 #   Push the new path into the queue
                 for neighbor in neighbors:
-                    new_path = list(path)
+                    new_path = list(current_path)
                     new_path.append(neighbor)
                     queue.enqueue(new_path)
                     # return path if neighbor is destination_vertex
@@ -161,16 +161,18 @@ class Graph:
                         return new_path
 
                 # mark node as explored
-                gray.append(current)
+                gray.append(current_vertex)
 
         # If there's no path between the 2 vertices:
         return None
 
     def dfs(self, starting_vertex, destination_vertex):
         """
-        Return a list containing a path from
+        Return a list containing a path (not necessarily the shortest) from
         starting_vertex to destination_vertex in
         depth-first order.
+
+        Note that there are multiple valid paths.
         """
         pass  # TODO
 
