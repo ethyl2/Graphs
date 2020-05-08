@@ -106,7 +106,17 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        gray = []
+
+        def dft_visit(vertex):
+            gray.append(vertex)
+            print(vertex)
+            neighbors = self.get_neighbors(vertex)
+            for neighbor in neighbors:
+                if neighbor not in gray:
+                    dft_visit(neighbor)
+
+        dft_visit(starting_vertex)
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -161,10 +171,10 @@ if __name__ == '__main__':
     Should print:
         {1: {2}, 2: {3, 4}, 3: {5}, 4: {6, 7}, 5: {3}, 6: {3}, 7: {1, 6}}
     '''
-    print(graph.vertices)
+    # print(graph.vertices)
 
     # graph.add_edge(4, 0)
-    print(graph.get_neighbors(7))
+    # print(graph.get_neighbors(7))
 
     '''
     Valid BFT paths:
@@ -181,7 +191,7 @@ if __name__ == '__main__':
         1, 2, 4, 3, 7, 6, 5
         1, 2, 4, 3, 7, 5, 6
     '''
-    graph.bft(1)
+    # graph.bft(1)
 
     '''
     Valid DFT paths:
@@ -190,10 +200,10 @@ if __name__ == '__main__':
         1, 2, 4, 7, 6, 3, 5
         1, 2, 4, 6, 3, 5, 7
     '''
-    graph.dft(1)
-    """
-    graph.dft_recursive(1)
+    # graph.dft(1)
 
+    graph.dft_recursive(1)
+    """
     '''
     Valid BFS path:
         [1, 2, 4, 6]

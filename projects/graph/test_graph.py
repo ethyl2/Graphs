@@ -80,7 +80,7 @@ class Test(unittest.TestCase):
         self.assertIn(output, dft)
 
         sys.stdout = stdout_  # Restore stdout
-    '''
+
     def test_dft_recursive(self):
         dft = [
             "1\n2\n3\n5\n4\n6\n7\n",
@@ -97,7 +97,7 @@ class Test(unittest.TestCase):
         self.assertIn(output, dft)
 
         sys.stdout = stdout_  # Restore stdout
-
+    '''
     def test_bfs(self):
         bfs = [1, 2, 4, 6]
         self.assertListEqual(self.graph.bfs(1, 6), bfs)
