@@ -222,14 +222,13 @@ class Graph:
 
         Note that there are multiple valid paths.
         """
-        gray = [starting_vertex]
+        gray = {starting_vertex}
         path = [starting_vertex]
 
         return self.dfs_visit(starting_vertex, destination_vertex, path, gray)
 
     def dfs_visit(self, vertex, destination_vertex, path, gray):
 
-        # gray.append(vertex)
         print("current vertex: " + str(vertex))
 
         if vertex == destination_vertex:
@@ -240,9 +239,10 @@ class Graph:
         for neighbor in neighbors:
             if neighbor not in gray:
                 print(path)
+                gray.add(neighbor)
                 result = self.dfs_visit(
-                    neighbor, destination_vertex, path + [neighbor], gray + [neighbor])
-                print("result" + str(result))
+                    neighbor, destination_vertex, path + [neighbor], gray)
+                print("result: " + str(result))
                 if result is not None:
                     return result
 
