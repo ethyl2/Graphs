@@ -11,7 +11,7 @@ def earliest_ancestor(ancestors, starting_node):
     If more than one node is found at that furthest distance, return the one with the lowest ID.
     If the starting_node has no parents, return -1.
     '''
-    # Put the ancestors into a graph. Probably with directed edges pointing from child to parent.
+    # Put the ancestors into a graph, with directed edges pointing from child to parent.
     graph = Graph()
 
     # Add the vertices
@@ -35,7 +35,7 @@ def earliest_ancestor(ancestors, starting_node):
         print(f'{element}: {graph.vertices[element]}')
     '''
     # Do a modified dft which saves the paths, in order to later figure out the longest path,
-    # and to return the element at index -1 of the longest path.
+    #   and to return the element at index -1 of the longest path.
 
     # Call the get_all_dfs_paths() method to find the dfs paths
     candidate_paths = graph.get_all_dft_paths(starting_node)
@@ -44,6 +44,7 @@ def earliest_ancestor(ancestors, starting_node):
     if len(candidate_paths[0]) == 1:
         # print("no parents")
         return -1
+
     # If there is only 1 path, return the tail of the path.
     elif len(candidate_paths) == 1:
         # print(candidate_paths[0][-1])
@@ -64,6 +65,7 @@ def earliest_ancestor(ancestors, starting_node):
         return min([x[-1] for x in longest_paths])
 
 
-test_ancestors = [(1, 3), (2, 3), (3, 6), (5, 6), (5, 7),
-                  (4, 5), (4, 8), (8, 9), (11, 8), (10, 1)]
-print(earliest_ancestor(test_ancestors, 3))
+if __name__ == '__main__':
+    test_ancestors = [(1, 3), (2, 3), (3, 6), (5, 6), (5, 7),
+                      (4, 5), (4, 8), (8, 9), (11, 8), (10, 1)]
+    print(earliest_ancestor(test_ancestors, 9))
