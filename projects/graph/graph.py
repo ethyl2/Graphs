@@ -137,7 +137,8 @@ class Graph:
         breath-first order.
         """
         # keep track of explored nodes
-        gray = []
+        # gray = []
+        gray = set()
 
         # keep track of all the paths to be checked
         # Unlike bft, the queue holds subarrays, the paths.
@@ -173,7 +174,8 @@ class Graph:
                         return new_path
 
                 # mark node as explored
-                gray.append(current_vertex)
+                # gray.append(current_vertex)
+                gray.add(current_vertex)
 
         # If there's no path between the 2 vertices:
         return None
@@ -338,7 +340,7 @@ if __name__ == '__main__':
     Valid BFS path:
         [1, 2, 4, 6]
     '''
-    # print(graph.bfs(1, 6))
+    print(graph.bfs(1, 6))
 
     '''
     Valid DFS paths:
@@ -347,7 +349,7 @@ if __name__ == '__main__':
     '''
     # print(graph.dfs(1, 6))
 
-    print(graph.dfs_recursive(1, 6))
+    # print(graph.dfs_recursive(1, 6))
 
     # print(list(graph.dfs_paths(1, 6)))
     # print(graph.return_path_from_dfs_paths(1, 6))

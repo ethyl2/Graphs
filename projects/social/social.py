@@ -47,11 +47,11 @@ class SocialGraph:
             print(
                 "Error: The number of users must be greater than the average number of friendships.")
             return None
+
         # Reset graph
         self.last_id = 0
         self.users = {}
         self.friendships = {}
-        # !!!! IMPLEMENT ME
 
         # Add users
         name_num = 0
