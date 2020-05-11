@@ -21,11 +21,11 @@ class Graph:
         """
         Add a directed edge to the graph.
         """
-        if v2 in self.vertices:
+        if v2 in self.vertices and v1 in self.vertices:
             self.vertices[v1].add(v2)
         else:
-            print(f'{v2} is not in graph')
-        # Should we add a check to see if v1 is in the graph, too?
+            print(f'{v2} and/or {v1} is not in graph')
+            raise IndexError("Vertex does not exist in graph")
 
     def get_neighbors(self, vertex_id):
         """
