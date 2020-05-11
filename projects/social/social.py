@@ -223,6 +223,45 @@ class SocialGraph:
         print(f'{ave_percentage}%')
         return ave_percentage
 
+    def calculate_ave_degree_of_separation_overall(self):
+        '''
+        Returns the average degree of separation between each user and his/her extended network,
+        in the entire network.
+
+        The distance, or degrees of separation, between any two nodes is the number of links 
+        along the shortest path that separates them.
+         = len(shortest_path) - 1
+
+        Loop through each user in the network.
+            Get the paths for each user and his/her connections:
+                For each user,
+                    For each connection,
+                        Calculate the length of each path - 1 = degrees_of_separation
+                Calculate the ave degrees_of_separation for that user.
+
+        Calculate the overall ave degrees_of_separation.
+        '''
+        degrees = []
+        users = list(self.users)
+        for user in users:
+            degree = self.calculate_ave_degree_of_separation_for_user(user)
+            degrees.append(degree)
+
+        ave_degree = round(mean(degrees), 0)
+        print(f'Overall average degrees of separation: {ave_degree}%')
+        return ave_degree
+
+    def calculate_ave_degree_of_separation_for_user(self, user):
+        degrees = []
+        paths = list(self.get_all_social_paths(user).values())
+        for path in paths:
+            # print(path)
+            degree = len(path) - 1
+            degrees.append(degree)
+        ave_degrees = round(mean(degrees), 2)
+        # print(f'Average degrees for user {user}: {ave_degrees}')
+        return ave_degrees
+
 
 def fisher_yates_shuffle(l):
     for i in range(0, len(l)):
@@ -233,7 +272,7 @@ def fisher_yates_shuffle(l):
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(100, 2)  # 10, 2
+    sg.populate_graph(150, 5)  # 10, 2
 
     '''
     for user in sg.users:
@@ -249,4 +288,5 @@ if __name__ == '__main__':
     # print(connections)
 
     # sg.calculate_percentage()
-    sg.calculate_percentage2()
+    # sg.calculate_percentage2()
+    sg.calculate_ave_degree_of_separation_overall()
