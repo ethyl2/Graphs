@@ -1,5 +1,6 @@
 import random
 from itertools import combinations
+from util import Queue
 
 
 class User:
@@ -85,10 +86,55 @@ class SocialGraph:
         extended network with the shortest friendship path between them.
 
         The key is the friend's ID and the value is the path.
+
+        Loop through all of the users in the network.
+        Get the bfs path from the user_id to that user.
+        If there is a path,
+            add the key/value pair of 'user: [bfs path]' to the visited dictionary.
         """
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+
+        # Loop through all the users, to get the ones that aren't connected directly,
+        # as well as the ones connnected directly.
+        users = list(self.users)
+
+        for user in users:
+            # call bfs() with user_id as starting_vertex, user as destination_vertex
+            path = self.bfs(user_id, user)
+            # If the path is not []
+            #   add to the visited dictionary
+            #       value  <- user
+            #       key <- path returned from bfs()
+            if len(path) > 0:
+                visited[user] = path
         return visited
+
+    def bfs(self, starting_vertex, destination_vertex):
+        print(
+            f'Starting_vertex: {str(starting_vertex)}, Destination_vertex: {str(destination_vertex)}')
+        visited = set()
+        queue = Queue()
+        queue.enqueue([starting_vertex])
+
+        # return queue if starting_vertex is the destination_vertex
+        if starting_vertex == destination_vertex:
+            return [starting_vertex]
+
+        while queue.size() > 0:
+            current_path = queue.dequeue()
+            current_vertex = current_path[-1]
+            if current_vertex not in visited:
+                neighbors = list(self.friendships[current_vertex])
+                for neighbor in neighbors:
+                    new_path = list(current_path)
+                    new_path.append(neighbor)
+                    queue.enqueue(new_path)
+                    if neighbor == destination_vertex:
+                        print(f'Found path: {str(new_path)}')
+                        return new_path
+            visited.add(current_vertex)
+        print(f'No path found to {destination_vertex}')
+        return []
 
 
 def fisher_yates_shuffle(l):
@@ -124,9 +170,9 @@ if __name__ == '__main__':
         print(f'{user}: {sg.users[user].name}')
     '''
 
-    # print(sg.friendships)
-    print_friendships_info(sg.friendships, 10)
-    '''
+    print(sg.friendships)
+    print('\n')
+    # print_friendships_info(sg.friendships, 10)
+
     connections = sg.get_all_social_paths(1)
     print(connections)
-    '''
