@@ -116,7 +116,7 @@ class SocialGraph:
         queue = Queue()
         queue.enqueue([starting_vertex])
 
-        # return queue if starting_vertex is the destination_vertex
+        # return list containing the vertex if starting_vertex is the destination_vertex
         if starting_vertex == destination_vertex:
             return [starting_vertex]
 
@@ -136,29 +136,28 @@ class SocialGraph:
         print(f'No path found to {destination_vertex}')
         return []
 
+    def print_friendships_info(self):
+        print(self.friendships)
+        print("length of friendships: " + str(len(self.friendships)))
+        print('\n')
+        for user in list(self.friendships.items()):
+            print(user)
+        print('\n')
+        total_connections = 0
+        for user in list(self.friendships.items()):
+            print(f'{user[0]}: num friends -- {len(list(user[1]))}')
+            total_connections += len(list(user[1]))
+        print('\n')
+        print('total connections: ' + str(total_connections))
+        ave_num_connections = total_connections/len(list(self.users))
+        print('ave_num_connections: ' + str(ave_num_connections))
+
 
 def fisher_yates_shuffle(l):
     for i in range(0, len(l)):
         random_index = random.randint(i, len(l) - 1)
         l[random_index], l[i] = l[i], l[random_index]
     return l
-
-
-def print_friendships_info(friendships, num_users):
-    print(friendships)
-    print("length of friendships: " + str(len(friendships)))
-    print('\n')
-    for user in list(sg.friendships.items()):
-        print(user)
-    print('\n')
-    total_connections = 0
-    for user in list(sg.friendships.items()):
-        print(f'{user[0]}: num friends -- {len(list(user[1]))}')
-        total_connections += len(list(user[1]))
-    print('\n')
-    print('total connections: ' + str(total_connections))
-    ave_num_connections = total_connections/num_users
-    print('ave_num_connections: ' + str(ave_num_connections))
 
 
 if __name__ == '__main__':
@@ -172,7 +171,7 @@ if __name__ == '__main__':
 
     print(sg.friendships)
     print('\n')
-    # print_friendships_info(sg.friendships, 10)
-
+    # sg.print_friendships_info()
+    # print('\n')
     connections = sg.get_all_social_paths(1)
     print(connections)
