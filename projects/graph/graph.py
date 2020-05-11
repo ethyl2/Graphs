@@ -83,20 +83,20 @@ class Graph:
         beginning from starting_vertex.
         """
         # Similar to bft, except using a stack instead of a queue
-        gray = []
+        gray = set()
         stack = Stack()
 
-        gray.append(starting_vertex)
+        gray.add(starting_vertex)
         stack.push(starting_vertex)
 
         while stack.size() > 0:
             current = stack.pop()
-            gray.append(current)
+            gray.add(current)
             print(current)
             neighbors = self.get_neighbors(current)
             for neighbor in neighbors:
                 if neighbor not in gray:
-                    gray.append(neighbor)
+                    gray.add(neighbor)
                     stack.push(neighbor)
 
     def dft_recursive(self, starting_vertex):
