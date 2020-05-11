@@ -1,6 +1,7 @@
 import random
 from itertools import combinations
 from util import Queue
+from statistics import mean
 
 
 class User:
@@ -107,11 +108,14 @@ class SocialGraph:
             #       key <- path returned from bfs()
             if len(path) > 0:
                 visited[user] = path
+        # print(visited)
         return visited
 
     def bfs(self, starting_vertex, destination_vertex):
+        '''
         print(
             f'Starting_vertex: {str(starting_vertex)}, Destination_vertex: {str(destination_vertex)}')
+        '''
         visited = set()
         queue = Queue()
         queue.enqueue([starting_vertex])
@@ -130,10 +134,10 @@ class SocialGraph:
                     new_path.append(neighbor)
                     queue.enqueue(new_path)
                     if neighbor == destination_vertex:
-                        print(f'Found path: {str(new_path)}')
+                        # print(f'Found path: {str(new_path)}')
                         return new_path
             visited.add(current_vertex)
-        print(f'No path found to {destination_vertex}')
+        # print(f'No path found to {destination_vertex}')
         return []
 
     def print_friendships_info(self):
@@ -152,6 +156,73 @@ class SocialGraph:
         ave_num_connections = total_connections/len(list(self.users))
         print('ave_num_connections: ' + str(ave_num_connections))
 
+    def calculate_percentage(self):
+        '''
+        Returns the average percentage of users in a network that aren't directly connected to a user, but
+        are in a user's extended social network
+        Sum(
+        Users in user's extended social network, but not connected directly / total users in user's extended network * 100
+        ) / number of total users in network
+        '''
+        # Loop through all users in the network.
+        #   Get the users directly connected to them. directly_connected
+        #   Get the users connected to them with a path.
+        #       paths = self.get_all_social_paths()
+        #       all_connected = list(paths.keys())
+        #   Find which users are connectly indirectly (all_connected - directly_connected)
+        #   percentage_for_user = num_indirectly_connected/all_connected * 100
+        # Then find the average percentage.
+        percentages = []
+
+        users = list(self.users)
+        for user in users:
+            directly_connected = self.friendships[user]
+            # print(directly_connected)
+            paths = self.get_all_social_paths(user)
+            all_connected = list(paths.keys())
+            # print(all_connected)
+            indirectly_connected = set()
+            for connected_user in all_connected:
+                if connected_user not in directly_connected:
+                    indirectly_connected.add(connected_user)
+            # print(indirectly_connected)
+            '''
+            print(
+                f'{user}: Direct: {directly_connected}, All: {all_connected}, Indirect: {indirectly_connected}')
+            '''
+            percentage_for_user = len(
+                list(indirectly_connected))/len(all_connected) * 100
+            # print(percentage_for_user)
+            percentages.append(percentage_for_user)
+
+        # ave_percentage = sum(percentages)/len(percentages)
+        ave_percentage = round(mean(percentages), 2)
+        # print('\n')
+        print(f'{ave_percentage}%')
+        return ave_percentage
+
+    def calculate_percentage2(self):
+        '''
+        For each user in a network, finds the percentage of users that are connected (directly or indirectly) to that user.
+        connected_users/total_users * 100
+
+        And then finds the ave percentage for all the users in the network.
+        '''
+        percentages = []
+
+        users = list(self.users)
+        for user in users:
+            paths = self.get_all_social_paths(user)
+            all_connected = list(paths.keys())
+            percentage = len(all_connected) / len(users) * 100
+            # print(percentage)
+            # print(f'{len(all_connected)}/{len(users)} * 100 = {percentage}')
+            percentages.append(percentage)
+
+        ave_percentage = round(mean(percentages), 2)
+        print(f'{ave_percentage}%')
+        return ave_percentage
+
 
 def fisher_yates_shuffle(l):
     for i in range(0, len(l)):
@@ -162,16 +233,20 @@ def fisher_yates_shuffle(l):
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(10, 2)  # 10, 2
+    sg.populate_graph(100, 2)  # 10, 2
 
     '''
     for user in sg.users:
         print(f'{user}: {sg.users[user].name}')
     '''
 
-    print(sg.friendships)
-    print('\n')
-    # sg.print_friendships_info()
+    # print(sg.friendships)
     # print('\n')
-    connections = sg.get_all_social_paths(1)
-    print(connections)
+    # sg.print_friendships_info()
+
+    # print('\n')
+    # connections = sg.get_all_social_paths(1)
+    # print(connections)
+
+    # sg.calculate_percentage()
+    sg.calculate_percentage2()
