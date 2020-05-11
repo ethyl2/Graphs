@@ -55,7 +55,7 @@ class Graph:
         #   And print it.
 
         # Assume the vertices are all white at first
-        gray = []
+        gray = set()
         queue = Queue()
 
         # Add the starting_vertex to the queue
@@ -66,7 +66,7 @@ class Graph:
             # Get the head of the queue
             current = queue.dequeue()
             # Mark it gray
-            gray.append(current)
+            gray.add(current)
             # Print it
             print(current)
 
@@ -74,7 +74,7 @@ class Graph:
             neighbors = self.get_neighbors(current)
             for neighbor in neighbors:
                 if neighbor not in gray:
-                    gray.append(neighbor)
+                    gray.add(neighbor)
                     queue.enqueue(neighbor)
 
     def dft(self, starting_vertex):
