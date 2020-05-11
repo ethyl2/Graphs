@@ -106,10 +106,10 @@ class Graph:
 
         This should be done using recursion.
         """
-        gray = []
+        gray = set()
 
         def dft_visit(vertex):
-            gray.append(vertex)
+            gray.add(vertex)
             print(vertex)
             neighbors = self.get_neighbors(vertex)
             for neighbor in neighbors:
@@ -119,7 +119,7 @@ class Graph:
         dft_visit(starting_vertex)
 
     def dft_recursive2(self, start, visited=None):
-        # This version is very similar, but uses a set to store visited and subtracts visited in the loop
+        # This version is very similar, but subtracts visited in the loop
         # print(visited)
         if visited is None:
             visited = set()

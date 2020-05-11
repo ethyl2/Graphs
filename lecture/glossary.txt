@@ -1,0 +1,14 @@
+Node/Verts/Vertexes/Vertices: nodes in the graph that hold information and edges they connect to.
+Edges connect nodes, and can have weights.
+Directed graphs have one-way edges.
+Undirected graphs have all two-way edges.
+Cyclic graphs: you can find your way back to the node you started on.
+Acyclic graphs: directed graphs you can't find your way back to the starting node. Also known as Directed Acyclic Graphs or DAGs.
+Dense graphs: Many edges relative to the number of nodes. Nodes connect to a lot of other nodes.
+Sparse graphs: Few edges relative to the number of nodes. Nodes connect to few other nodes.
+Completely connected graph: Every node is connected to every other node. Maximally dense.
+Edge weights: Can be used to influence searches and traversals
+If all edges have the same weight, or none specified, we say it's an unweighted graph.
+Representing Graphs:
+* Adjacency Matrices/Matrixes: Grid showing connections from node to node.
+* Adjacency Lists: List per node, showing which nodes it connects to.
