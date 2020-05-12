@@ -189,10 +189,10 @@ class Graph:
         Note that there are multiple valid paths.
         """
         # Similar to bfs, except using a stack instead of a queue
-        gray = []
+        gray = set()
         stack = Stack()
 
-        gray.append(starting_vertex)
+        gray.add(starting_vertex)
         # Unlike dft, the stack holds arrays (paths) instead of ints
         stack.push([starting_vertex])
 
@@ -202,7 +202,7 @@ class Graph:
         while stack.size() > 0:
             current_path = stack.pop()
             current_node = current_path[-1]
-            gray.append(current_node)
+            gray.add(current_node)
             neighbors = self.get_neighbors(current_node)
             for neighbor in neighbors:
                 if neighbor not in gray:
@@ -210,7 +210,7 @@ class Graph:
                     new_path.append(neighbor)
                     if neighbor == destination_vertex:
                         return new_path
-                    gray.append(neighbor)
+                    gray.add(neighbor)
                     stack.push(new_path)
         return None
 

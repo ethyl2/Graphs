@@ -62,6 +62,20 @@ class SocialGraph:
             self.add_user(f'Name{name_num}')
 
         # Create friendships:
+        # This way doesn't use combinations() and therefore, should run in O(n) instead of O(n^2)
+        friendships = set()
+        possibilities = list(self.users.keys())
+        num_connections = num_users * avg_friendships // 2
+        while len(friendships) < num_connections:
+            ranInd1 = random.randint(0, len(possibilities) - 1)
+            ranInd2 = random.randint(0, len(possibilities) - 1)
+            new_connection = tuple(
+                [possibilities[ranInd1], possibilities[ranInd2]])
+            if ranInd1 != ranInd2:
+                friendships.add(new_connection)
+        print(friendships)
+        '''
+        # The way to do it, according to the hints:
         #   Create a list with all possible friendship combinations.
         # print(list(self.users.keys()))
         possibilities = list(combinations(list(self.users.keys()), 2))
@@ -72,9 +86,9 @@ class SocialGraph:
 
         # Get N (num_users * avg_friendships // 2) connections by grabbing the first N elements of the list
         friendships = possibilities[:(num_users*avg_friendships // 2)]
-        # print(friendships)
+        print(friendships)
         # print("length of friendships: " + str(len(friendships)))
-
+        '''
         # Add each of those to the graph.
         for friendship in friendships:
             self.add_friendship(friendship[0], friendship[1])
@@ -272,7 +286,7 @@ def fisher_yates_shuffle(l):
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(150, 5)  # 10, 2
+    sg.populate_graph(10, 2)  # 10, 2
 
     '''
     for user in sg.users:
