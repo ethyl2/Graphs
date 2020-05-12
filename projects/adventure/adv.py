@@ -12,11 +12,11 @@ world = World()
 
 
 # You may uncomment the smaller graphs for development and testing purposes.
-# map_file = "maps/test_line.txt"
+map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
-map_file = "maps/main_maze.txt"
+# map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 """
@@ -43,6 +43,15 @@ traversal_path = []
 visited_rooms = set()
 player.current_room = world.starting_room
 visited_rooms.add(player.current_room)
+
+# Traversal graph creation
+graph = dict()
+graph[player.current_room.id] = dict()
+current_exits = player.current_room.get_exits()
+for exit in current_exits:
+    graph[player.current_room.id][exit] = '?'
+print("graph so far: ")
+print(graph)
 
 for move in traversal_path:
     player.travel(move)
