@@ -71,9 +71,14 @@ class SocialGraph:
             ranInd2 = random.randint(0, len(possibilities) - 1)
             new_connection = tuple(
                 [possibilities[ranInd1], possibilities[ranInd2]])
-            if ranInd1 != ranInd2:
+            connection_check = tuple(
+                [possibilities[ranInd2], possibilities[ranInd1]])
+            # As long as the 2 nums aren't the same,
+            #  and that the inverse tuple isn't already in the friendships set,
+            #  add the new connection
+            if ranInd1 != ranInd2 and connection_check not in friendships:
                 friendships.add(new_connection)
-        print(friendships)
+        # print(friendships)
         '''
         # The way to do it, according to the hints:
         #   Create a list with all possible friendship combinations.
@@ -286,7 +291,7 @@ def fisher_yates_shuffle(l):
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(10, 2)  # 10, 2
+    sg.populate_graph(100, 5)  # 10, 2
 
     '''
     for user in sg.users:
