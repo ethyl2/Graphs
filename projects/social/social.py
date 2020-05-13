@@ -62,7 +62,7 @@ class SocialGraph:
             self.add_user(f'Name{name_num}')
 
         # Create friendships:
-        # This way doesn't use combinations() and therefore, should run in O(n) instead of O(n^2)
+        # This way doesn't use combinations() and therefore, should run in O(n) instead of O(n^2) ?
         friendships = set()
         possibilities = list(self.users.keys())
         num_connections = num_users * avg_friendships // 2
@@ -97,6 +97,24 @@ class SocialGraph:
         # Add each of those to the graph.
         for friendship in friendships:
             self.add_friendship(friendship[0], friendship[1])
+
+        ''' 
+        # Another way to generate friendships, from lecture:
+        
+        possible_friendships = []
+        # Avoid duplicates by ensuring the first number is smaller than the second
+        for user_id in self.users:
+            for friend_id in range(user_id + 1, self.last_id + 1):
+                possible_friendships.append((user_id, friend_id))
+        # Shuffle the possible friendships
+        random.shuffle(possible_friendships)
+        # Create friendships for the first X pairs of the list
+        # X is determined by the formula: num_users * avg_friendships // 2
+        # Need to divide by 2 since each add_friendship() creates 2 friendships
+        for i in range(num_users * avg_friendships // 2):
+            friendship = possible_friendships[i]
+            self.add_friendship(friendship[0], friendship[1])
+        '''
 
     def get_all_social_paths(self, user_id):
         """
