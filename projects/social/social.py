@@ -64,8 +64,19 @@ class SocialGraph:
         # Create friendships:
         # This way doesn't use combinations() and therefore, should run in O(n) instead of O(n^2) ?
         friendships = set()
-        possibilities = list(self.users.keys())
+
+        #possibilities = list(self.users.keys())
+        # Below is an experiment to make the earlier users have a greater probability of having connections
+        # to make the model more realistic
+        possibilities = list(self.users.keys()) + \
+            list(self.users.keys())[:self.last_id//2] + \
+            list(self.users.keys())[:self.last_id//2] + \
+            list(self.users.keys())[:self.last_id//4]
+
+        # Uncomment below to generate the model according to the given spec (and comment out the line that follows it)
         num_connections = num_users * avg_friendships // 2
+        # Below is an experiment to make the results more realistic
+        # num_connections = num_users * avg_friendships // 4
         while len(friendships) < num_connections:
             ranInd1 = random.randint(0, len(possibilities) - 1)
             ranInd2 = random.randint(0, len(possibilities) - 1)
@@ -100,7 +111,7 @@ class SocialGraph:
 
         ''' 
         # Another way to generate friendships, from lecture:
-        
+
         possible_friendships = []
         # Avoid duplicates by ensuring the first number is smaller than the second
         for user_id in self.users:
@@ -318,12 +329,12 @@ if __name__ == '__main__':
 
     # print(sg.friendships)
     # print('\n')
-    # sg.print_friendships_info()
+    sg.print_friendships_info()
 
-    # print('\n')
+    print('\n')
     # connections = sg.get_all_social_paths(1)
     # print(connections)
 
     # sg.calculate_percentage()
-    # sg.calculate_percentage2()
+    sg.calculate_percentage2()
     sg.calculate_ave_degree_of_separation_overall()
