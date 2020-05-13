@@ -1,48 +1,3 @@
-import sys
-import os
-from room import Room
-from player import Player
-from world import World
-
-import random
-from ast import literal_eval
-
-# Load world
-world = World()
-
-
-# You may uncomment the smaller graphs for development and testing purposes.
-# map_file = "maps/test_line.txt"
-# map_file = "maps/test_cross.txt"
-# map_file = "maps/test_loop.txt"
-map_file = "maps/test_loop_fork.txt"
-# map_file = "maps/main_maze.txt"
-
-# Loads the map into a dictionary
-"""
-room_graph=literal_eval(open(map_file, "r").read())
-"""
-with open(os.path.join(sys.path[0], map_file), 'r') as f:
-    room_graph = literal_eval(f.read())
-
-
-world.load_graph(room_graph)
-
-
-# Print an ASCII map
-world.print_rooms()
-
-player = Player(world.starting_room)
-
-# Fill this out with directions to walk
-# traversal_path = ['n', 'n']
-
-# TRAVERSAL TEST
-visited_rooms = set()
-player.current_room = world.starting_room
-visited_rooms.add(player.current_room)
-
-
 def create_traversal_path():
     visited_rooms = set()
     player = Player(world.starting_room)
@@ -65,12 +20,16 @@ def create_traversal_path():
     print("time to go " + move)
     stack.append(move)
     # print("unexplored_directions" + str(unexplored_directions))
-    while len(visited_rooms) < len(room_graph):
-        print("length of visited_rooms: " + str(len(visited_rooms)))
-        # while len(stack) > 0:
-        while len(visited_rooms) < len(room_graph):
-            print("current stack before popping: " + str(stack))
-            move = stack.pop()
+    # while len(visited_rooms) < len(room_graph):
+    while len(stack) > 0:
+        move = stack.pop()
+        while len(unexplored_directions) > 0:
+            # Pick a random unexplored direction from the current room.
+            '''
+            move = unexplored_directions[random.randint(
+                0, len(unexplored_directions) - 1)]
+            print("time to go " + move)
+            '''
             # Hold on to the prev room's id to update the graph
             prev_room = player.current_room.id
             # Travel that direction
@@ -109,46 +68,11 @@ def create_traversal_path():
             if len(unexplored_directions) > 0:
                 move = unexplored_directions[random.randint(
                     0, len(unexplored_directions) - 1)]
+                print("time to go " + move)
                 # Add it to the stack
                 stack.append(move)
             else:
-                #    stack.append(opposites[move])
-                if move in graph[player.current_room.id]:
-                    stack.append(move)
-                else:
-                    stack.append(opposites[move])
+                stack.append(opposites[move])
 
-    # print("Traversal_path is made! " + str(traversal_path))
+    print("Traversal_path is made! " + str(traversal_path))
     return traversal_path
-
-
-traversal_path = create_traversal_path()
-
-# Test, where player travels through traversal_path.
-for move in traversal_path:
-    player.travel(move)
-    visited_rooms.add(player.current_room)
-
-if len(visited_rooms) == len(room_graph):
-    print(
-        f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
-else:
-    print("TESTS FAILED: INCOMPLETE TRAVERSAL")
-    print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
-
-
-#######
-# UNCOMMENT TO WALK AROUND
-#######
-player.current_room.print_room_description(player)
-
-'''
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
-    else:
-        print("I did not understand that command.")
-'''
