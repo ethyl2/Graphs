@@ -54,22 +54,19 @@ def create_traversal_path():
     current_exits = player.current_room.get_exits()
     for exit in current_exits:
         graph[player.current_room.id][exit] = '?'
-    print("graph so far: ")
-    print(graph)
 
     # Find which directions are still unexplored
     unexplored_directions = [entry[0] for entry in list(
         graph[player.current_room.id].items()) if entry[1] == '?']
     move = unexplored_directions[random.randint(
         0, len(unexplored_directions) - 1)]
-    print("time to go " + move)
     stack.append(move)
     # print("unexplored_directions" + str(unexplored_directions))
     while len(visited_rooms) < len(room_graph):
-        print("length of visited_rooms: " + str(len(visited_rooms)))
+        # print("length of visited_rooms: " + str(len(visited_rooms)))
         # while len(stack) > 0:
         while len(visited_rooms) < len(room_graph):
-            print("current stack before popping: " + str(stack))
+            # print("current stack before popping: " + str(stack))
             move = stack.pop()
             # Hold on to the prev room's id to update the graph
             prev_room = player.current_room.id
@@ -80,7 +77,7 @@ def create_traversal_path():
 
             # Add current_room to visited_rooms
             visited_rooms.add(player.current_room)
-            print("traversal_path: " + str(traversal_path))
+            # print("traversal_path: " + str(traversal_path))
             current_exits = player.current_room.get_exits()
             # Update the graph
 
@@ -98,8 +95,8 @@ def create_traversal_path():
             opposite = opposites[move]
             # print(opposite)
             graph[player.current_room.id][opposite] = prev_room
-            print("graph so far: ")
-            print(graph)
+            print("graph so far: " + str(graph))
+            # print(graph)
 
             # Find which directions are still unexplored
             unexplored_directions = [entry[0] for entry in list(
@@ -112,13 +109,22 @@ def create_traversal_path():
                 # Add it to the stack
                 stack.append(move)
             else:
-                #    stack.append(opposites[move])
                 if move in graph[player.current_room.id]:
                     stack.append(move)
                 else:
-                    stack.append(opposites[move])
+                    choices = []
+                    if 'n' in graph[player.current_room.id] and 'n' != move:
+                        choices.append('n')
+                    if 's' in graph[player.current_room.id] and 's' != move:
+                        choices.append('s')
+                    if 'e' in graph[player.current_room.id] and 'e' != move:
+                        choices.append('e')
+                    if 'w' in graph[player.current_room.id] and 'w' != move:
+                        choices.append('w')
+                    next_move = choices[random.randint(0, len(choices) - 1)]
+                    stack.append(next_move)
 
-    # print("Traversal_path is made! " + str(traversal_path))
+    print("Traversal_path is made! " + str(traversal_path))
     return traversal_path
 
 
