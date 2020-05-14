@@ -12,7 +12,7 @@ def find_nearest_unexplored_room(graph, current_room):
     print("Current_room in fnur: " + str(current_room))
     unexplored_room_path = bfs(graph, current_room)
     # del unexplored_room_path[0]
-    # Now convert it to directions (??)
+    # Now convert it to directions
     print(unexplored_room_path)
     path = []
 
@@ -39,7 +39,7 @@ def bfs(graph, starting_vertex):
         current_path = queue.dequeue()
 
         current_vertex = current_path[-1]
-        print("current_vertex " + str(current_vertex))
+        # print("current_vertex " + str(current_vertex))
         if current_vertex not in visited_vertices:
             neighbors = get_neighbors(graph, current_vertex)
             for neighbor in neighbors:
@@ -62,10 +62,10 @@ world = World()
 
 # You may uncomment the smaller graphs for development and testing purposes.
 # map_file = "maps/test_line.txt"
-map_file = "maps/test_cross.txt"
+# map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
-# map_file = "maps/main_maze.txt"
+map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 """
@@ -110,7 +110,6 @@ def create_traversal_path():
     move = unexplored_directions[random.randint(
         0, len(unexplored_directions) - 1)]
     stack.append(move)
-    # print("unexplored_directions" + str(unexplored_directions))
 
     while len(visited_rooms) < len(room_graph):
         print("num visited rooms: " + str(len(visited_rooms)))
@@ -126,10 +125,11 @@ def create_traversal_path():
 
         # Add current_room to visited_rooms
         visited_rooms.add(player.current_room)
-        # print("traversal_path: " + str(traversal_path))
-        current_exits = player.current_room.get_exits()
-        # Update the graph
+        print("now num visited rooms is " + str(len(visited_rooms)))
 
+        current_exits = player.current_room.get_exits()
+
+        # Update the graph
         # Update the entry for the prev room
         graph[prev_room][move] = player.current_room.id
 
@@ -156,6 +156,9 @@ def create_traversal_path():
                 0, len(unexplored_directions) - 1)]
             # Add it to the stack
             stack.append(move)
+        elif len(visited_rooms) == len(room_graph):
+            print("Traversal_path is made! " + str(traversal_path))
+            return traversal_path
         else:
             '''
             if move in graph[player.current_room.id]:
@@ -186,11 +189,26 @@ def create_traversal_path():
             next_move = choices[random.randint(0, len(choices) - 1)]
             stack.append(next_move)
             '''
+            # Back up to nearest room with an unexplored direction
             next_step = find_nearest_unexplored_room(
                 graph, player.current_room.id)
             # print(next_step)
+            '''
             for direction in next_step:
-                stack.append(direction)
+                # stack.append(direction)
+                player.travel(direction)
+                print("In room " + str(player.current_room.id))
+                # Log that direction
+                traversal_path.append(direction)
+            '''
+            for i in range(0, len(next_step) - 1):
+                player.travel(next_step[i])
+                print("In room " + str(player.current_room.id))
+                # Log that direction
+                traversal_path.append(next_step[i])
+                # Add current_room to visited_rooms
+                visited_rooms.add(player.current_room)
+            stack.append(next_step[-1])
 
     print("Traversal_path is made! " + str(traversal_path))
     return traversal_path
