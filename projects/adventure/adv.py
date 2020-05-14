@@ -78,39 +78,6 @@ def get_neighbors(graph, room):
     return list(graph[room].values())
 
 
-# Load world
-world = World()
-
-
-# You may uncomment the smaller graphs for development and testing purposes.
-# map_file = "maps/test_line.txt"
-# map_file = "maps/test_cross.txt"
-# map_file = "maps/test_loop.txt"
-# map_file = "maps/test_loop_fork.txt"
-map_file = "maps/main_maze.txt"
-
-# Loads the map into a dictionary
-"""
-room_graph=literal_eval(open(map_file, "r").read())
-"""
-with open(os.path.join(sys.path[0], map_file), 'r') as f:
-    room_graph = literal_eval(f.read())
-
-
-world.load_graph(room_graph)
-
-
-# Print an ASCII map
-world.print_rooms()
-
-player = Player(world.starting_room)
-
-# TRAVERSAL TEST
-visited_rooms = set()
-player.current_room = world.starting_room
-visited_rooms.add(player.current_room)
-
-
 def create_traversal_path():
     visited_rooms = set()
     player = Player(world.starting_room)
@@ -202,9 +169,36 @@ def create_traversal_path():
                 visited_rooms.add(player.current_room)
             stack.append(next_step[-1])
 
-    print("Traversal_path is made! " + str(traversal_path))
-    return traversal_path
+# Load world and have player traverse it
 
+
+# Load world
+world = World()
+
+# You may uncomment the smaller graphs for development and testing purposes.
+# map_file = "maps/test_line.txt"
+# map_file = "maps/test_cross.txt"
+# map_file = "maps/test_loop.txt"
+# map_file = "maps/test_loop_fork.txt"
+map_file = "maps/main_maze.txt"
+
+# Loads the map into a dictionary
+"""
+room_graph=literal_eval(open(map_file, "r").read())
+"""
+with open(os.path.join(sys.path[0], map_file), 'r') as f:
+    room_graph = literal_eval(f.read())
+world.load_graph(room_graph)
+
+# Print an ASCII map
+world.print_rooms()
+
+player = Player(world.starting_room)
+
+# TRAVERSAL TEST
+visited_rooms = set()
+player.current_room = world.starting_room
+visited_rooms.add(player.current_room)
 
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
@@ -226,7 +220,7 @@ else:
 #######
 # UNCOMMENT TO WALK AROUND
 #######
-player.current_room.print_room_description(player)
+# player.current_room.print_room_description(player)
 
 '''
 while True:
