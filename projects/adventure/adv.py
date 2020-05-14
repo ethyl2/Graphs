@@ -11,6 +11,9 @@ from ast import literal_eval
 def find_nearest_unexplored_room(graph, current_room):
     # print("Current_room in fnur: " + str(current_room))
     unexplored_room_path = bfs(graph, current_room)
+    # use below if you want to use dfs instead:
+    # unexplored_room_path = dfs(graph, current_room)
+
     # Now convert it to directions
     # print(unexplored_room_path)
     path = []
@@ -50,6 +53,26 @@ def bfs(graph, starting_vertex):
             visited_vertices.add(current_vertex)
 
 
+def dfs(graph, starting_vertex):
+    visited_vertices = set()
+    stack = Stack()
+    stack.push([starting_vertex])
+    while stack.size() > 0:
+        current_path = stack.pop()
+
+        current_vertex = current_path[-1]
+        # print("current_vertex " + str(current_vertex))
+        if current_vertex not in visited_vertices:
+            neighbors = get_neighbors(graph, current_vertex)
+            for neighbor in neighbors:
+                new_path = list(current_path)
+                new_path.append(neighbor)
+                stack.push(new_path)
+                if neighbor == '?':
+                    return new_path
+            visited_vertices.add(current_vertex)
+
+
 def get_neighbors(graph, room):
     # Gets the room IDs of neighbors, or '?'
     return list(graph[room].values())
@@ -82,9 +105,6 @@ world.print_rooms()
 
 player = Player(world.starting_room)
 
-# Fill this out with directions to walk
-# traversal_path = ['n', 'n']
-
 # TRAVERSAL TEST
 visited_rooms = set()
 player.current_room = world.starting_room
@@ -106,6 +126,7 @@ def create_traversal_path():
     # Find which directions are still unexplored
     unexplored_directions = [entry[0] for entry in list(
         graph[player.current_room.id].items()) if entry[1] == '?']
+
     move = unexplored_directions[random.randint(
         0, len(unexplored_directions) - 1)]
     stack.append(move)
@@ -149,11 +170,17 @@ def create_traversal_path():
         # Find which directions are still unexplored
         unexplored_directions = [entry[0] for entry in list(
             graph[player.current_room.id].items()) if entry[1] == '?']
+
         # If still has unexplored_directions,
         # Pick a random unexplored direction from the current room.
         if len(unexplored_directions) > 0:
+            # To See if having a default direction decreases the traveral_path length
+            # if 'w' in unexplored_directions:
+            #     move = 'w'
+            # else:
             move = unexplored_directions[random.randint(
                 0, len(unexplored_directions) - 1)]
+
             # Add it to the stack
             stack.append(move)
         elif len(visited_rooms) == len(room_graph):
@@ -179,6 +206,8 @@ def create_traversal_path():
     return traversal_path
 
 
+# Fill this out with directions to walk
+# traversal_path = ['n', 'n']
 traversal_path = create_traversal_path()
 
 # Test, where player travels through traversal_path.
