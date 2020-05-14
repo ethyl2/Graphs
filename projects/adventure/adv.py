@@ -3,9 +3,58 @@ import os
 from room import Room
 from player import Player
 from world import World
-
+from util import Stack, Queue
 import random
 from ast import literal_eval
+
+
+def find_nearest_unexplored_room(graph, current_room):
+    print("Current_room in fnur: " + str(current_room))
+    unexplored_room_path = bfs(graph, current_room)
+    # del unexplored_room_path[0]
+    # Now convert it to directions (??)
+    print(unexplored_room_path)
+    path = []
+
+    for i in range(0, len(unexplored_room_path) - 1):
+        # print("Graph at room " +
+        #       str(unexplored_room_path[i]) + ": " + str(graph[unexplored_room_path[i]]))
+        graph_list = list(
+            graph[unexplored_room_path[i]].items())
+        direction = ''
+        for entry in graph_list:
+            if entry[1] == unexplored_room_path[i + 1]:
+                direction = entry[0]
+                # print("Direction found: " + str(direction))
+        path.append(direction)
+    print(str(path))
+    return(path)
+
+
+def bfs(graph, starting_vertex):
+    visited_vertices = set()
+    queue = Queue()
+    queue.enqueue([starting_vertex])
+    while queue.size() > 0:
+        current_path = queue.dequeue()
+
+        current_vertex = current_path[-1]
+        print("current_vertex " + str(current_vertex))
+        if current_vertex not in visited_vertices:
+            neighbors = get_neighbors(graph, current_vertex)
+            for neighbor in neighbors:
+                new_path = list(current_path)
+                new_path.append(neighbor)
+                queue.enqueue(new_path)
+                if neighbor == '?':
+                    return new_path
+            visited_vertices.add(current_vertex)
+
+
+def get_neighbors(graph, room):
+    # Gets the room IDs of neighbors, or '?'
+    return list(graph[room].values())
+
 
 # Load world
 world = World()
@@ -13,10 +62,10 @@ world = World()
 
 # You may uncomment the smaller graphs for development and testing purposes.
 # map_file = "maps/test_line.txt"
-# map_file = "maps/test_cross.txt"
+map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
-map_file = "maps/main_maze.txt"
+# map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 """
@@ -124,6 +173,7 @@ def create_traversal_path():
                 next_move = choices[random.randint(0, len(choices) - 1)]
                 stack.append(next_move)
             '''
+            '''
             choices = []
             if 'n' in graph[player.current_room.id]:
                 choices.append('n')
@@ -135,6 +185,12 @@ def create_traversal_path():
                 choices.append('w')
             next_move = choices[random.randint(0, len(choices) - 1)]
             stack.append(next_move)
+            '''
+            next_step = find_nearest_unexplored_room(
+                graph, player.current_room.id)
+            # print(next_step)
+            for direction in next_step:
+                stack.append(direction)
 
     print("Traversal_path is made! " + str(traversal_path))
     return traversal_path
