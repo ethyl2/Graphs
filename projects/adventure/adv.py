@@ -78,6 +78,11 @@ def get_neighbors(graph, room):
     return list(graph[room].values())
 
 
+def save_path(traversal_path):
+    with open(os.path.join(sys.path[0], 'path.txt'), 'w') as f:
+        f.write(str(traversal_path))
+
+
 def create_traversal_path():
     visited_rooms = set()
     player = Player(world.starting_room)
@@ -202,25 +207,38 @@ visited_rooms.add(player.current_room)
 
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
-traversal_path = create_traversal_path()
 
-# Test, where player travels through traversal_path.
-for move in traversal_path:
-    player.travel(move)
-    visited_rooms.add(player.current_room)
 
-if len(visited_rooms) == len(room_graph):
-    print(
-        f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
-else:
-    print("TESTS FAILED: INCOMPLETE TRAVERSAL")
-    print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
+def create_path_to_save():
+    traversal_path = create_traversal_path()
+    save_path(traversal_path)
 
+
+def move_player_through_path():
+    # Test, where player travels through traversal_path.
+    with open(os.path.join(sys.path[0], 'path.txt'), 'r') as f:
+        traversal_path = literal_eval(f.read())
+        # saved_path = f.read()
+
+    for move in traversal_path:
+        player.travel(move)
+        visited_rooms.add(player.current_room)
+
+    if len(visited_rooms) == len(room_graph):
+        print(
+            f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
+    else:
+        print("TESTS FAILED: INCOMPLETE TRAVERSAL")
+        print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
+
+
+move_player_through_path()
 
 #######
 # UNCOMMENT TO WALK AROUND
 #######
 # player.current_room.print_room_description(player)
+
 
 '''
 while True:
