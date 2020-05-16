@@ -21,11 +21,11 @@ class Graph:
         """
         Add a directed edge to the graph.
         """
-        if v2 in self.vertices and v1 in self.vertices:
+        if v2 in self.vertices:
             self.vertices[v1].add(v2)
         else:
-            print(f'{v2} and/or {v1} is not in graph')
-            raise IndexError("Vertex does not exist in graph")
+            print(f'{v2} is not in graph')
+        # Should we add a check to see if v1 is in the graph, too?
 
     def get_neighbors(self, vertex_id):
         """
@@ -55,7 +55,7 @@ class Graph:
         #   And print it.
 
         # Assume the vertices are all white at first
-        gray = set()
+        gray = []
         queue = Queue()
 
         # Add the starting_vertex to the queue
@@ -66,7 +66,7 @@ class Graph:
             # Get the head of the queue
             current = queue.dequeue()
             # Mark it gray
-            gray.add(current)
+            gray.append(current)
             # Print it
             print(current)
 
@@ -74,7 +74,7 @@ class Graph:
             neighbors = self.get_neighbors(current)
             for neighbor in neighbors:
                 if neighbor not in gray:
-                    gray.add(neighbor)
+                    gray.append(neighbor)
                     queue.enqueue(neighbor)
 
     def dft(self, starting_vertex):
@@ -83,20 +83,20 @@ class Graph:
         beginning from starting_vertex.
         """
         # Similar to bft, except using a stack instead of a queue
-        gray = set()
+        gray = []
         stack = Stack()
 
-        gray.add(starting_vertex)
+        gray.append(starting_vertex)
         stack.push(starting_vertex)
 
         while stack.size() > 0:
             current = stack.pop()
-            gray.add(current)
+            gray.append(current)
             print(current)
             neighbors = self.get_neighbors(current)
             for neighbor in neighbors:
                 if neighbor not in gray:
-                    gray.add(neighbor)
+                    gray.append(neighbor)
                     stack.push(neighbor)
 
     def dft_recursive(self, starting_vertex):
@@ -106,10 +106,10 @@ class Graph:
 
         This should be done using recursion.
         """
-        gray = set()
+        gray = []
 
         def dft_visit(vertex):
-            gray.add(vertex)
+            gray.append(vertex)
             print(vertex)
             neighbors = self.get_neighbors(vertex)
             for neighbor in neighbors:
@@ -119,7 +119,7 @@ class Graph:
         dft_visit(starting_vertex)
 
     def dft_recursive2(self, start, visited=None):
-        # This version is very similar, but subtracts visited in the loop
+        # This version is very similar, but uses a set to store visited and subtracts visited in the loop
         # print(visited)
         if visited is None:
             visited = set()
@@ -137,8 +137,7 @@ class Graph:
         breath-first order.
         """
         # keep track of explored nodes
-        # gray = []
-        gray = set()
+        gray = []
 
         # keep track of all the paths to be checked
         # Unlike bft, the queue holds subarrays, the paths.
@@ -174,8 +173,7 @@ class Graph:
                         return new_path
 
                 # mark node as explored
-                # gray.append(current_vertex)
-                gray.add(current_vertex)
+                gray.append(current_vertex)
 
         # If there's no path between the 2 vertices:
         return None
@@ -189,10 +187,10 @@ class Graph:
         Note that there are multiple valid paths.
         """
         # Similar to bfs, except using a stack instead of a queue
-        gray = set()
+        gray = []
         stack = Stack()
 
-        gray.add(starting_vertex)
+        gray.append(starting_vertex)
         # Unlike dft, the stack holds arrays (paths) instead of ints
         stack.push([starting_vertex])
 
@@ -202,7 +200,7 @@ class Graph:
         while stack.size() > 0:
             current_path = stack.pop()
             current_node = current_path[-1]
-            gray.add(current_node)
+            gray.append(current_node)
             neighbors = self.get_neighbors(current_node)
             for neighbor in neighbors:
                 if neighbor not in gray:
@@ -210,7 +208,7 @@ class Graph:
                     new_path.append(neighbor)
                     if neighbor == destination_vertex:
                         return new_path
-                    gray.add(neighbor)
+                    gray.append(neighbor)
                     stack.push(new_path)
         return None
 
@@ -262,11 +260,13 @@ class Graph:
         return list(self.dfs_paths(starting_vertex, ending_vertex))[0]
 
     def generate_dft_paths(self, starting_node, path=None):
+        # Returns a generator with all of the dft paths.
         if path is None:
             path = [starting_node]
 
         unvisited_neighbors = self.get_neighbors(starting_node) - set(path)
         if len(unvisited_neighbors) < 1:
+            # At a dead end, so add the path.
             yield path
         else:
             for unvisited_neighbor in unvisited_neighbors:
@@ -340,7 +340,7 @@ if __name__ == '__main__':
     Valid BFS path:
         [1, 2, 4, 6]
     '''
-    print(graph.bfs(1, 6))
+    # print(graph.bfs(1, 6))
 
     '''
     Valid DFS paths:
@@ -349,7 +349,7 @@ if __name__ == '__main__':
     '''
     # print(graph.dfs(1, 6))
 
-    # print(graph.dfs_recursive(1, 6))
+    print(graph.dfs_recursive(1, 6))
 
     # print(list(graph.dfs_paths(1, 6)))
     # print(graph.return_path_from_dfs_paths(1, 6))
