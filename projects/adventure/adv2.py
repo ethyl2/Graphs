@@ -68,14 +68,16 @@ def backtrack_to_unexplored() -> List[int]:
                 else:
                     # make a copy of the current_path
                     current_path_copy = list(current_path)
+                    # Add the direction to it
                     current_path_copy.append(graph[prev_room][direction])
+                    # And add to the backtracking_queue
                     backtracking_queue.enqueue(current_path_copy)
 
     # If no valid backtracking path is found
     return []
 
 
-def enqueue_moves():
+def enqueue_moves() -> None:
     """
     Adds to the moves_queue. 
         Either adds a direction to go to next, from the player's current room
@@ -84,7 +86,6 @@ def enqueue_moves():
             where there are unexplored exits.
     """
     current_room_exits = graph[player.current_room.id]
-    # current_room_exits = player.current_room.get_exits() # might work instead of above, but maybe not enough info
     unexplored_exits = []
     for direction in current_room_exits:
         if current_room_exits[direction] == '?':
@@ -108,7 +109,7 @@ def enqueue_moves():
                     break
 
 
-def create_path():
+def create_path() -> None:
     new_room = {}
     for direction in player.current_room.get_exits():
         new_room[direction] = '?'
@@ -143,9 +144,26 @@ def create_path():
         if moves_queue.size() <= 0:
             # print("moves_queue is empty, so time to call enqueue_moves")
             enqueue_moves()
+    return path
 
 
-def move_player_along_path():
+def create_shortest_path():
+    shortest_path_length = 99999999999
+    shortest_path = []
+    for i in range(10):
+        player.current_room = world.starting_room
+        current_path = create_path()
+        if len(current_path) < shortest_path_length:
+            shortest_path = current_path
+            shortest_path_length = len(current_path)
+            print('found a shorter path of length ', shortest_path_length)
+    print("shortest winner: ", shortest_path_length)
+    path = shortest_path
+    return shortest_path
+
+
+def move_player_along_path() -> None:
+    print('using path of length ', len(path))
     visited_rooms = set()
     player.current_room = world.starting_room
     visited_rooms.add(player.current_room)
@@ -158,6 +176,7 @@ def move_player_along_path():
 
 
 create_path()
+# create_shortest_path()
 # print('path created: ', path)
 # print('graph created: ', graph)
 move_player_along_path()
